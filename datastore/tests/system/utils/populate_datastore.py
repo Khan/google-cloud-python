@@ -121,6 +121,13 @@ def add_timestamp_keys(client=None):
                 batch.put(entity)
 
 
+def add_all(client):
+    add_characters(client)
+    add_uid_keys(client)
+    add_timestamp_keys(client)
+
+
+
 def main():
     client = datastore.Client()
     flags = sys.argv[1:]

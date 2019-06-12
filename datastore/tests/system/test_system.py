@@ -76,6 +76,7 @@ def tearDownModule():
 
 
 class TestDatastore(unittest.TestCase):
+    maxDiff = None
     def setUp(self):
         self.case_entities_to_delete = []
 
@@ -242,7 +243,7 @@ class TestDatastoreQuery(TestDatastore):
         # In the emulator, re-populating the datastore is cheap.
         if os.getenv(GCD_DATASET) is not None:
             # Populate the datastore with the cloned client.
-            populate_datastore.add_characters(client=cls.CLIENT)
+            populate_datastore.add_all(client=cls.CLIENT)
 
         cls.CHARACTERS = populate_datastore.CHARACTERS
         # Use the client for this test instead of the global.
@@ -395,7 +396,7 @@ class TestDatastoreQuery(TestDatastore):
 
     def test_query_offset_timestamp_keys(self):
         # See issue #4675
-        max_all = 10000
+        max_all = 1000
         offset = 1
         max_offset = max_all - offset
         query = self.CLIENT.query(kind="timestamp_key")
@@ -545,7 +546,6 @@ class TestDatastoreTransaction(TestDatastore):
         local_client = clone_client(Config.CLIENT)
 
         key = local_client.key("EmptyArray", 1234)
-        local_client = datastore.Client()
         entity = datastore.Entity(key=key)
         entity["children"] = []
         local_client.put(entity)
